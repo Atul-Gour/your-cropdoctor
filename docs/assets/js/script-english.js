@@ -13,18 +13,18 @@ document.getElementById('recordButton').addEventListener('click', function() {
 const diseaseData = {
     "Rice": {
         "Blast": {
-            "response": "Rice blast disease is caused by a fungus called 'Magnaporthe oryzae'. Symptoms include brown spots on leaves that expand over time.<br><br>Treatment:<br>1. Spray Tricyclazole 75% WP @ 0.6g/L of water<br>2. Spray Propiconazole 25% EC @ 1ml/L of water<br>3. Spray Carbendazim 50% WP @ 1g/L of water"
+            "response": "Rice blast disease may be present. This is caused by a fungus called 'Magnaporthe oryzae'. Symptoms include brown spots on leaves that expand over time.<br><br>Treatment:<br>1. Spray Tricyclazole 75% WP @ 0.6g/L of water<br>2. Spray Propiconazole 25% EC @ 1ml/L of water<br>3. Spray Carbendazim 50% WP @ 1g/L of water"
         },
-        "Sheath Blight": {
-            "response": "Sheath blight is a serious rice disease that can devastate crops.<br><br>Control Measures:<br>1. Use resistant varieties<br>2. Apply nitrogen fertilizers in balanced amounts<br>3. Manage field water properly<br>4. Spray Tricyclazole or Isoprothiolane"
+        "Blight": {
+            "response": "Rice blight is a serious disease that can destroy the entire crop.<br><br>Control Measures:<br>1. Use resistant varieties<br>2. Maintain balanced nitrogen fertilizer usage<br>3. Manage water levels properly<br>4. Spray Tricyclazole or Isoprothiolane"
         }
     },
     "Wheat": {
         "Rust": {
-            "response": "Wheat rust disease has three types: leaf rust, stem rust, and yellow rust.<br><br>Control Measures:<br>1. Spray Propiconazole 25% EC @ 1ml/L of water<br>2. Spray Tebuconazole 25.9% EC @ 1ml/L of water<br>3. Use resistant varieties for the next season"
+            "response": "Wheat rust disease can be of three types: leaf rust, stem rust, and yellow rust.<br><br>Control Measures:<br>1. Spray Propiconazole 25% EC @ 1ml/L of water<br>2. Spray Tebuconazole 25.9% EC @ 1ml/L of water<br>3. Select resistant varieties for the next season"
         },
         "Karnal Bunt": {
-            "response": "Karnal bunt is a fungal disease that reduces wheat grain quality.<br><br>Control Measures:<br>1. Use certified seeds<br>2. Treat seeds with Carbendazim 2g/kg of seed<br>3. Follow crop rotation<br>4. Avoid irrigation in affected areas"
+            "response": "Karnal bunt is a fungal disease that reduces grain quality.<br><br>Control Measures:<br>1. Use certified seeds<br>2. Treat seeds with Carbendazim @ 2g/kg of seed<br>3. Follow crop rotation (growing different crops each year)<br>4. Avoid irrigation in affected areas"
         }
     }
 };
@@ -36,7 +36,7 @@ document.getElementById('submitTextButton').addEventListener('click', function()
         processTextInput(text);
         document.getElementById('problemText').value = '';
     } else {
-        alert('Please describe your problem');
+        alert('Please enter your problem');
     }
 });
 
@@ -62,13 +62,14 @@ document.getElementById('imageUpload').addEventListener('change', function(event
             selectedImageDiv.appendChild(img);
 
             setTimeout(function() {
-                addChatMessage('Analyzing the disease...', 'bot');
+                addChatMessage('Identifying the disease...', 'bot');
+
                 setTimeout(function() {
-                    const response = 'The image appears to show rice blast disease. This is a fungal infection that affects leaves, stems, and grains. Control measures include:' +
+                    const response = 'The image shows signs of rice blast disease. This fungal disease affects leaves, stems, and grains. To control this disease:' +
                         '<ul>' +
                         '<li>Spray Tricyclazole or Isoprothiolane</li>' +
                         '<li>Use resistant varieties in the next crop cycle</li>' +
-                        '<li>Apply nitrogen fertilizers in balanced amounts</li>' +
+                        '<li>Maintain balanced nitrogen fertilizer usage</li>' +
                         '</ul>';
                     addChatMessage(response, 'bot');
                 }, 2000);
@@ -78,7 +79,6 @@ document.getElementById('imageUpload').addEventListener('change', function(event
     }
 });
 
-// Process typed text input
 function processTextInput(text) {
     addChatMessage(text, 'user');
     simulateResponse(text);
@@ -89,7 +89,7 @@ let recognition;
 
 function startVoiceRecognition() {
     if (!('webkitSpeechRecognition' in window)) {
-        alert('Voice recognition is not supported in this browser. Please use Chrome or another modern browser.');
+        alert('This browser does not support voice recognition. Please use Chrome or a modern browser.');
         return;
     }
 
@@ -118,17 +118,6 @@ function startVoiceRecognition() {
         }
     };
 
-    recognition.onerror = function(event) {
-        console.error('Speech recognition error:', event.error);
-        document.getElementById('status').textContent = 'Error: ' + event.error;
-        document.getElementById('recordButton').classList.remove('recording');
-    };
-
-    recognition.onend = function() {
-        document.getElementById('status').textContent = 'Recording finished';
-        document.getElementById('recordButton').classList.remove('recording');
-    };
-
     recognition.start();
 }
 
@@ -141,4 +130,48 @@ function stopVoiceRecognition() {
 function processVoiceInput(text) {
     addChatMessage(text, 'user');
     simulateResponse(text);
+}
+
+function simulateResponse(query) {
+    const lowerQuery = query.toLowerCase();
+    addChatMessage('Thinking about your problem...', 'bot');
+
+    setTimeout(() => {
+        let found = false;
+        for (const crop in diseaseData) {
+            if (lowerQuery.includes(crop.toLowerCase())) {
+                for (const disease in diseaseData[crop]) {
+                    if (lowerQuery.includes(disease.toLowerCase())) {
+                        addChatMessage(diseaseData[crop][disease].response, 'bot');
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (found) break;
+        }
+
+        if (!found) {
+            let suggestions = [];
+            for (const crop in diseaseData) {
+                for (const disease in diseaseData[crop]) {
+                    suggestions.push(`${crop} ${disease}`);
+                }
+            }
+
+            const suggestionText = 'I am having trouble understanding your problem. Please ask about one of the following issues:<br>' +
+                suggestions.map(s => `• ${s}`).join('<br>');
+
+            addChatMessage(suggestionText, 'bot');
+        }
+    }, 1500);
+}
+
+function addChatMessage(text, sender) {
+    const chatContainer = document.getElementById('chat-container');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message ' + (sender === 'user' ? 'user-message' : 'bot-message');
+    messageDiv.innerHTML = text;
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
