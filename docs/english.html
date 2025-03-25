@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Disease Assistant</title>
+    <link rel="stylesheet" href="assets\css\style.css"/>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Crop Disease Assistant</h1>
+            <p>Free assistance for rice and wheat diseases</p>
+            <div class="team-info">
+                <p>Team: Code Hunters01</p>
+                <p>Members: Bharat, Atul, Shriya, Khushi</p>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <h2 class="section-title">Describe Your Problem</h2>
+            
+            <div class="input-options">
+                <div class="input-option">
+                    <h3>Speak Your Problem</h3>
+                    <p>Click the microphone button and speak in Hindi</p>
+                    
+                    <button id="recordButton" class="record-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="6"></circle>
+                        </svg>
+                    </button>
+                    
+                    <div id="status" style="margin-top: 10px;">Ready</div>
+                    
+                    <div class="text-display">
+                        <div id="interim-text"></div>
+                        <div id="final-text"></div>
+                    </div>
+                </div>
+                
+                <div class="input-option">
+                    <h3>Write Your Problem</h3>
+                    <p>Type your crop problem here</p>
+                    
+                    <textarea id="problemText" class="text-input" rows="4" placeholder="Example: My rice crop has brown spots on the leaves..."></textarea>
+                    
+                    <button id="submitTextButton" class="submit-btn">Submit Problem</button>
+                </div>
+            </div>
+            
+            <div class="upload-section">
+                <h3>Or Upload Your Crop Picture</h3>
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button id="uploadButton" class="upload-btn">Choose Photo</button>
+                <div id="selectedImage" style="margin-top: 10px;"></div>
+            </div>
+            
+            <div class="response-section">
+                <h2 class="section-title">Assistance</h2>
+                <div id="chat-container" class="chat-container">
+                    <div class="chat-message bot-message">
+                        I can help you with diseases in your rice and wheat crops. Please describe your problem or upload a photo.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="simple-guide">
+                <h3>How to Use:</h3>
+                <ol>
+                    <li>Click the microphone button and speak your problem</li>
+                    <li>Or write your problem in the text box</li>
+                    <li>Or upload a picture of your crop</li>
+                    <li>You will receive immediate help and solutions</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets\js\script-english.js"></script>
+</body>
+</html>
